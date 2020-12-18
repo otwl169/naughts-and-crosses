@@ -5,22 +5,76 @@ c.font = "50px IBM Plex Sans";
 var width = canvas.width;
 var height = canvas.height;
 
-window.addEventListener("mousedown", 
-    function () {
-        console.log("Mouse has been clicked!");
-    })
-
 function Game(){
     this.board = [
         ['', '', ''], // Row 0
-        ['', 'X', ''], // Row 1
+        ['', '', ''], // Row 1
         ['', '', ''] // Row 2
     ]
     this.p1 = 'X';
     this.p2 = 'O';
     this.currentTurn = this.p1;
 
-    
+    this.checkMove = function (x, y) {
+        // Check if it is in a row
+        var row = null;
+        for(var i = 0; i < 3; i++){
+            console.log("Is it between: "+i*height/3+", and: "+ (i+1)*height/3);
+            if(y > i*height/3 && y < (i+1)*height/3){
+                console.log("It is, so now row is: "+i);
+                row = i;
+            }
+        }
+
+        // Check what column it is in
+        var column = null;
+        for(var i = 0; i < 3; i++){
+            if(x > i*width/3 && x < (i+1)*width/3){
+                column = i;
+            }
+        }
+        
+        // Execute based on whether we clicked in a cell
+        if(row != null && column != null){ 
+
+            if(this.board[row][column] == ''){ // If we made a legal move
+                this.board[row][column] = (this.currentTurn == this.p1) ? this.p1 : this.p2; // Place token on board
+                
+                this.boardUpdate(); // Update our display
+                this.checkWin(); // Check if a player has won
+                this.currentTurn = (this.currentTurn == this.p1) ? this.p2 : this.p1; // Change player
+            }
+            
+        }
+    }
+
+    this.checkWin = function () {
+        // Win if we have 3 in a row of the same token in a) a row, b) a column, c) a diagonal
+        var winner = null;
+        // Check win in rows
+        for(row in this.board){
+            if(row[0] == row[1] && row[1] == row[2] && row[2] != ''){
+                winner = this.currentTurn;
+            }
+        }
+        // Check win in columns
+        for(var i = 0; i < 3; i++){ // Each column
+            if(this.board[0][i] == this.board[1][i] && this.board[1][i] == this.board[2][i] && this.board[2][i] != ''){
+                winner = this.currentTurn;
+            }
+        }
+        // Check win in diagonals
+        if(this.board[0][0] == this.board[1][1] && this.board[1][1] == this.board[2][2] && this.board[2][2] != ''){
+            winner = this.currentTurn;
+        } else if(this.board[2][0] == this.board[1][1] && this.board[1][1] == this.board[0][2] && this.board[0][2] != ''){
+            winner = this.currentTurn;
+        }
+
+        if(winner != null){
+            alert("WINNER IS: "+winner);
+        }
+        
+    }
 
     this.drawBlankBoard = function() {
         c.clearRect(0, 0, width, height);
@@ -56,7 +110,7 @@ function Game(){
         }
     }
 
-    this.update = function() {
+    this.boardUpdate = function() {
         this.drawBlankBoard();
         this.drawCellContents();
     }
@@ -64,6 +118,11 @@ function Game(){
 }
 
 var game = new Game();
+window.addEventListener("mousedown", 
+    function (event) {
+        console.log("X: "+event.x+", Y: "+event.y);
+        game.checkMove(event.x, event.y);
+    })
+
 console.log(game.board);
-game.drawBlankBoard();
-game.drawCellContents();
+game.boardUpdate();
