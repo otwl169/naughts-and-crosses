@@ -19,9 +19,7 @@ function Game(){
         // Check if it is in a row
         var row = null;
         for(var i = 0; i < 3; i++){
-            console.log("Is it between: "+i*height/3+", and: "+ (i+1)*height/3);
             if(y > i*height/3 && y < (i+1)*height/3){
-                console.log("It is, so now row is: "+i);
                 row = i;
             }
         }
@@ -50,19 +48,22 @@ function Game(){
 
     this.checkWin = function () {
         // Win if we have 3 in a row of the same token in a) a row, b) a column, c) a diagonal
+
         var winner = null;
         // Check win in rows
-        for(row in this.board){
-            if(row[0] == row[1] && row[1] == row[2] && row[2] != ''){
+        for(var i = 0; i < 3; i++){ // Each column
+            if(this.board[i][0] == this.board[i][1] && this.board[i][1] == this.board[i][2] && this.board[i][2] != ''){
                 winner = this.currentTurn;
             }
         }
+
         // Check win in columns
         for(var i = 0; i < 3; i++){ // Each column
             if(this.board[0][i] == this.board[1][i] && this.board[1][i] == this.board[2][i] && this.board[2][i] != ''){
                 winner = this.currentTurn;
             }
         }
+
         // Check win in diagonals
         if(this.board[0][0] == this.board[1][1] && this.board[1][1] == this.board[2][2] && this.board[2][2] != ''){
             winner = this.currentTurn;
