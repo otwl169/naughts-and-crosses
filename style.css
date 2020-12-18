@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@700&display=swap');
+
+* {
+    padding: 0px;
+}
+
+canvas {
+    /* border: 1px solid black; */
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.container {
+    display: flex;
+    background-color: #f4f4f4;
+}
